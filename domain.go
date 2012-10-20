@@ -10,6 +10,8 @@ type Domain struct {
 	Languages map[string]*Catalog
 }
 
+// Create a new Domain by parsing .mo files from path which must have subdirectories
+// matching the GLOB path/*/LC_MESSAGES/name.mo
 func NewDomain(name string, path string) (*Domain, error) {
 	files, err := filepath.Glob(filepath.Join(path, "*", "LC_MESSAGES", name+".mo"))
 	if err != nil {
