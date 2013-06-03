@@ -35,31 +35,24 @@ func ParseMO(r io.ReadSeeker) (*Catalog, error) {
 		return nil, ErrInvalidMagic
 	}
 
-	var version, stringCount, origOffset, transOffset uint32
-	if err := binary.Read(r, bo, &version); err != nil {
-		return nil, err
+	var header struct {
+		Version, StringCount, OrigOffset, TransOffset uint32
 	}
-	if err := binary.Read(r, bo, &stringCount); err != nil {
-		return nil, err
-	}
-	if err := binary.Read(r, bo, &origOffset); err != nil {
-		return nil, err
-	}
-	if err := binary.Read(r, bo, &transOffset); err != nil {
+	if err := binary.Read(r, bo, &header); err != nil {
 		return nil, err
 	}
 
 	// TODO: Check version
 
-	stringOffsets := make([]struct{ origStart, origLen, transStart, transLen int32 }, stringCount)
+	stringOffsets := make([]struct{ origStart, origLen, transStart, transLen int32 }, header.StringCount)
 
-	if o, err := r.Seek(int64(origOffset), 0); err != nil {
+	if o, err := r.Seek(int64(header.OrigOffset), 0); err != nil {
 		return nil, err
-	} else if o != int64(origOffset) {
+	} else if o != int64(header.OrigOffset) {
 		return nil, ErrTruncated
 	}
 
-	for i := 0; i < int(stringCount); i++ {
+	for i := 0; i < int(header.StringCount); i++ {
 		if err := binary.Read(r, bo, &stringOffsets[i].origLen); err != nil {
 			return nil, err
 		}
@@ -68,13 +61,13 @@ func ParseMO(r io.ReadSeeker) (*Catalog, error) {
 		}
 	}
 
-	if o, err := r.Seek(int64(transOffset), 0); err != nil {
+	if o, err := r.Seek(int64(header.TransOffset), 0); err != nil {
 		return nil, err
-	} else if o != int64(transOffset) {
+	} else if o != int64(header.TransOffset) {
 		return nil, ErrTruncated
 	}
 
-	for i := 0; i < int(stringCount); i++ {
+	for i := 0; i < int(header.StringCount); i++ {
 		if err := binary.Read(r, bo, &stringOffsets[i].transLen); err != nil {
 			return nil, err
 		}
@@ -84,7 +77,7 @@ func ParseMO(r io.ReadSeeker) (*Catalog, error) {
 	}
 
 	catalog := Catalog{
-		Strings:       make(map[string]*Translation, stringCount),
+		Strings:       make(map[string]*Translation, header.StringCount),
 		PluralFormula: GermanicPluralFormula,
 	}
 
