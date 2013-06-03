@@ -10,8 +10,8 @@ func TestParseMO(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Open failed with %+v", err)
 	}
-	if catalog, err := ParsePO(r); err != nil {
-		t.Fatalf("ParsePO returned error: %+v", err)
+	if catalog, err := ParseMO(r); err != nil {
+		t.Fatalf("ParseMO returned error: %+v", err)
 	} else {
 		if catalog.GetText("Untranslated String") != "Untranslated String" {
 			t.Error("Catalog.GetText returned wrong result for untranslated string")

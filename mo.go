@@ -20,7 +20,7 @@ var (
 	ErrTruncated    = errors.New("truncated")
 )
 
-func ParsePO(r io.ReadSeeker) (*Catalog, error) {
+func ParseMO(r io.ReadSeeker) (*Catalog, error) {
 	var magic uint32
 	if err := binary.Read(r, binary.LittleEndian, &magic); err != nil {
 		return nil, err

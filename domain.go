@@ -27,7 +27,7 @@ func NewDomain(name string, path string) (*Domain, error) {
 		if err != nil {
 			return nil, err
 		}
-		domain.Languages[langCode], err = ParsePO(fd)
+		domain.Languages[langCode], err = ParseMO(fd)
 		fd.Close()
 		if err != nil {
 			return nil, err
