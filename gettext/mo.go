@@ -16,8 +16,8 @@ const (
 )
 
 var (
-	ErrInvalidMagic = errors.New("magic has failed")
-	ErrTruncated    = errors.New("truncated")
+	ErrInvalidMagic = errors.New("gettext: magic has failed")
+	ErrTruncated    = errors.New("gettext: truncated")
 )
 
 func ParseMO(r io.ReadSeeker) (*Catalog, error) {

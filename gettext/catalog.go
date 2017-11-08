@@ -22,7 +22,7 @@ type Catalog struct {
 }
 
 var (
-	// The NullCatalog has no translations so can be used as a fallback
+	// NullCatalog has no translations so can be used as a fallback
 	NullCatalog = &Catalog{
 		Header:        make(map[string][]string),
 		Strings:       map[string]*Translation{},
